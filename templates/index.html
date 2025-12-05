@@ -1,0 +1,166 @@
+{% extends 'main.html' %}
+{% block content %}
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    background: #0a0f14;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    overflow-x: hidden;
+    color: white;
+  }
+
+  /* Background Waves (subtle) */
+  .wave-bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;https://i.ibb.co/5hYd3qK/wave2.png
+    background: url('');
+    opacity: 0.08;
+    animation: moveWave 16s infinite linear;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+  @keyframes moveWave {
+    0% { background-position-x: 0; }
+    100% { background-position-x: 1000px; }
+  }
+
+  /* Glass Card */
+  .glass-card {
+    width: 430px;
+    background: rgba(17,17,17,0.55);
+    backdrop-filter: blur(15px);
+    border-radius: 25px;
+    border: 1px solid rgba(0,255,247,0.15);
+    box-shadow: 0 0 20px rgba(0,255,247,0.2);
+  }
+
+  /* Buttons */
+  .btn-neon {
+    background: linear-gradient(to right, #00d1c1, #0099cc);
+    border: none;
+    font-weight: 600;
+    border-radius: 12px;
+    box-shadow: 0 0 6px rgba(0,209,193,0.6);
+    color: #111;
+    transition: 0.3s ease-in-out;
+    padding: 10px;
+  }
+  .btn-neon:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 12px rgba(0,209,193,0.7);
+  }
+
+  /* Inputs */
+  .form-control {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(0,209,193,0.3);
+    color: white;
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 15px;
+    box-shadow: inset 0 0 8px rgba(0,209,193,0.15);
+  }
+  .form-control:focus {
+    box-shadow: 0 0 10px rgba(0,209,193,0.3);
+    border-color: rgba(0,209,193,0.6);
+    outline: none;
+  }
+
+  /* ECG line */
+  .ecg-line {
+    width: 100%;
+    height: 60px;
+    margin-bottom: 15px;
+  }
+  .ecg-path {
+    stroke-dasharray: 180;
+    stroke-dashoffset: 360;
+    animation: ecgMove 2s linear infinite;
+    stroke: #00d1c1;
+    stroke-width: 3;
+  }
+
+  @keyframes ecgMove {
+    0% { stroke-dashoffset: 360; }
+    100% { stroke-dashoffset: 0; }
+  }
+</style>
+
+<div class="wave-bg"></div>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 95vh;">
+  <div class="card glass-card p-5">
+
+    <!-- ECG Animation -->
+    <svg class="ecg-line" viewBox="0 0 500 80">
+      <path d="M0 40 L100 40 L120 10 L140 70 L160 40 L260 40 L280 20 L300 60 L320 40 L500 40" 
+            class="ecg-path" fill="transparent"/>
+    </svg>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="alert alert-info my-2">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Login Form -->
+    <div id="loginForm">
+      <h2 class="text-center mb-4" style="color:#00d1c1; font-weight:600;">
+        <i class="fas fa-heartbeat"></i> Login
+      </h2>
+
+      <form method="POST" action="{{ url_for('userlog') }}">
+        <input type="text" class="form-control mt-3" name="name" placeholder="Username" required>
+        <input type="password" class="form-control mt-3" name="password" placeholder="Password" required>
+        <button class="btn-neon btn-block mt-4">Login</button>
+      </form>
+
+      <p class="text-center mt-3 text-light">
+        New here?
+        <span class="text-info" style="cursor:pointer;" onclick="switchForm('signup')">Register</span>
+      </p>
+    </div>
+
+    <!-- Signup Form -->
+    <div id="signupForm" class="d-none">
+      <h2 class="text-center mb-4" style="color:#00d1c1; font-weight:600;">
+        <i class="fas fa-user-plus"></i> Register
+      </h2>
+
+      <form method="POST" action="{{ url_for('userreg') }}">
+        <input type="text" class="form-control mt-3" name="name" placeholder="Username" required>
+        <input type="email" class="form-control mt-3" name="email" placeholder="Email" required>
+        <input type="tel" class="form-control mt-3" name="phone" placeholder="Mobile Number" required>
+        <input type="password" class="form-control mt-3" name="password" placeholder="Password" required>
+        <button class="btn-neon btn-block mt-4">Register</button>
+      </form>
+
+      <p class="text-center mt-3 text-light">
+        Already registered?
+        <span class="text-info" style="cursor:pointer;" onclick="switchForm('login')">Login</span>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function switchForm(type) {
+  if(type === 'signup') {
+    document.getElementById('loginForm').classList.add('d-none');
+    document.getElementById('signupForm').classList.remove('d-none');
+  } else {
+    document.getElementById('signupForm').classList.add('d-none');
+    document.getElementById('loginForm').classList.remove('d-none');
+  }
+}
+</script>
+
+{% endblock %}

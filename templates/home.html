@@ -1,0 +1,255 @@
+{% extends 'main.html' %}
+{% block content %}
+
+<!-- Cyan animated waves background -->
+<div class="bg-waves" aria-hidden="true">
+  <div class="wave w1"></div>
+  <div class="wave w2"></div>
+  <div class="wave w3"></div>
+</div>
+
+<div class="home-wrapper">
+
+  <!-- ECG Animated SVG behind the card, centered -->
+  <div class="ecg-header">
+    <svg class="ecg-svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="g1" x1="0" x2="1">
+          <stop offset="0%" stop-color="#00e5d4" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#4fffe8" stop-opacity="0.15"/>
+        </linearGradient>
+      </defs>
+      <!-- Exact waveform from your first chat -->
+      <path id="ecgPathHome"
+        d="M0 60 L40 60 L55 60 L70 20 L85 100 L100 60 L140 60 L200 60 L220 30 L240 60 
+           L320 60 L360 60 L380 20 L400 80 L420 60 L480 60 L560 60 L620 60 L640 30 
+           L660 60 L740 60 L820 60 L920 60 L1000 60 L1200 60"
+        stroke="url(#g1)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path id="ecgAnimHome" d="" stroke="#00e5d4" stroke-width="3" fill="none"/>
+    </svg>
+  </div>
+
+  <!-- Main Glass Card -->
+  <div class="main-card">
+    <div class="logo-icon">
+      <i class="fas fa-heartbeat"></i>
+    </div>
+
+    <h1 class="title">Cardiac Care AI</h1>
+    <p class="subtitle">AI-Powered Real-Time Heart Monitoring & Clinical Intelligence</p>
+
+    <a href="{{ url_for('index') }}" class="btn-main">User Login</a>
+
+    <!-- About/Features section -->
+    <div class="info-card">
+      <h3>About Cardiac Care AI</h3>
+      <p>
+        CardiacCare AI assists clinicians with real-time cardiac assessment,
+        arrhythmia detection, and personalized precaution recommendations using advanced AI models.
+      </p>
+
+      <h4>Features</h4>
+      <ul>
+        <li>Cardiac interpretation using AI</li>
+        <li>Arrhythmia & cardiac risk prediction</li>
+        <li>Clinical insights & precaution suggestions</li>
+        <li>Glassmorphism UI with animated ECG & cyan waves</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- THEME CSS -->
+<style>
+:root {
+  --cyan-1: #00e5d4;
+  --cyan-2: #4fffe8;
+  --bg-1: #061019;
+  --card-bg: rgba(255,255,255,0.05);
+  --glass-border: rgba(0,229,212,0.18);
+}
+
+/* Body */
+body {
+  background: linear-gradient(180deg,#04101a,#071e25);
+  font-family: 'Inter', sans-serif;
+  color: #e8fffd;
+  overflow-x: hidden;
+}
+
+/* Waves BG */
+.bg-waves {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: .35;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.wave {
+  position:absolute;
+  width:200%; height:30%; left:-50%;
+  background:linear-gradient(90deg,rgba(0,229,212,0.08),rgba(79,255,232,0.03));
+  animation:waveMove 16s linear infinite;
+  filter:blur(24px);
+}
+.w2 { top:6%; animation-duration:22s; opacity:0.45; }
+.w3 { bottom:6%; animation-duration:28s; opacity:0.25; transform: translateY(20px) scale(1.1);}
+@keyframes waveMove {
+  0%{transform:translateX(-10%) translateY(0);}
+  50%{transform:translateX(10%) translateY(6%);}
+  100%{transform:translateX(-10%) translateY(0);}
+}
+
+/* Page wrapper */
+.home-wrapper {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+/* ECG SVG behind card, centered */
+.ecg-header {
+  width: 100%;
+  max-width: 1200px;
+  opacity: 0.18;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+.ecg-svg { width: 100%; }
+
+/* Main card */
+.main-card {
+  background: var(--card-bg);
+  border:1px solid var(--glass-border);
+  padding:40px;
+  border-radius:25px;
+  max-width:850px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 10px 40px rgba(0,0,0,0.45);
+  text-align:center;
+  position: relative;
+  z-index: 2; /* above ECG */
+  animation: cardFloat 4s ease-in-out infinite;
+}
+@keyframes cardFloat {
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+  100%{transform:translateY(0)}
+}
+
+/* Logo icon */
+.logo-icon i{
+  font-size:4rem;
+  color:var(--cyan-1);
+  text-shadow:0 0 18px rgba(0,229,212,0.5);
+}
+
+/* Text */
+.title{
+  font-family:'Poppins',sans-serif;
+  font-size:2.6rem;
+  color:var(--cyan-1);
+  margin-top:10px;
+}
+.subtitle{
+  color:#99bdb9;
+  font-size:1rem;
+  margin-bottom:25px;
+}
+
+/* Button */
+.btn-main{
+  background:linear-gradient(135deg,var(--cyan-1),var(--cyan-2));
+  color:#002523;
+  padding:12px 32px;
+  font-weight:600;
+  border-radius:14px;
+  text-decoration:none;
+  display:inline-block;
+  box-shadow:0 10px 30px rgba(0,229,212,0.12);
+  transition:.25s;
+}
+.btn-main:hover{
+  transform:translateY(-4px);
+  box-shadow:0 18px 40px rgba(0,229,212,0.2);
+}
+
+/* Info panel */
+.info-card{
+  margin-top:30px;
+  text-align:left;
+  background:rgba(255,255,255,0.03);
+  padding:25px;
+  border-radius:18px;
+  border:1px solid rgba(0,255,247,0.06);
+}
+.info-card h3,h4{
+  color:var(--cyan-1);
+  font-family:'Poppins';
+}
+.info-card ul li{
+  margin-bottom:6px;
+  color:#c6f7f3;
+}
+</style>
+
+<!-- ECG Animation Script -->
+<script>
+(function(){
+  const svg = document.querySelector('.ecg-svg');
+  if(!svg) return;
+
+  const path = document.getElementById('ecgPathHome');
+  if(!path) return;
+
+  // Clone path to animate stroke-dashoffset
+  const anim = path.cloneNode(true);
+  anim.setAttribute('id', 'ecgAnimatedCopyHome');
+  anim.setAttribute('stroke-width', '2.5');
+  anim.setAttribute('stroke-linecap','round');
+  anim.setAttribute('stroke', 'rgba(0,229,212,0.9)');
+  anim.setAttribute('fill', 'none');
+  anim.style.filter = 'drop-shadow(0 6px 12px rgba(0,229,212,0.18))';
+  path.parentNode.appendChild(anim);
+
+  function setupAnimation(p){
+    const length = p.getTotalLength();
+    p.style.strokeDasharray = length + ' ' + length;
+    p.style.strokeDashoffset = length;
+    p.getBoundingClientRect(); // force layout
+    p.style.transition = 'stroke-dashoffset 1.6s linear';
+    setInterval(()=> {
+      p.style.transition = 'none';
+      p.style.strokeDashoffset = length;
+      requestAnimationFrame(()=> {
+        requestAnimationFrame(()=> {
+          p.style.transition = 'stroke-dashoffset 1.6s linear';
+          p.style.strokeDashoffset = '0';
+        });
+      });
+    }, 2100); // gap between pulses
+  }
+  setupAnimation(anim);
+
+  // Subtle floating motion
+  let t = 0;
+  function floatLoop(){
+    t += 0.01;
+    svg.style.transform = `translate(-50%, -50%) translateY(${Math.sin(t) * 3}px)`;
+    requestAnimationFrame(floatLoop);
+  }
+  floatLoop();
+})();
+</script>
+
+{% endblock %}

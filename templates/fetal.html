@@ -1,0 +1,444 @@
+{% extends 'main.html' %}
+{% block content %}
+
+<!--
+  Full upgraded page:
+  - Glassmorphism card
+  - Animated background waves
+  - ECG svg animation behind the form
+  - Header / Hero
+  - Collapsible sidebar + sample dashboard cards
+  - Heartbeat pulse Predict button
+-->
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+  /* Fonts */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Inter:wght@300;400;500&display=swap');
+
+  :root{
+    --cyan-1: #00e5d4;
+    --cyan-2: #51b4a7ff;
+    --bg-1: #061019;
+    --card-bg: rgba(255,255,255,0.05);
+    --muted: #99bdb9;
+    --glass-border: rgba(0,229,212,0.18);
+  }
+
+  body {
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(0,229,212,0.03), transparent),
+                radial-gradient(800px 400px at 90% 90%, rgba(79,255,232,0.02), transparent),
+                linear-gradient(180deg, #04101a 0%, #071e25 100%);
+    font-family: 'Inter', sans-serif;
+    color: #e8fffd;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  /* Animated background waves */
+  .bg-waves {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0.35;
+    mix-blend-mode: screen;
+  }
+  .wave {
+    position: absolute;
+    width: 200%;
+    height: 30%;
+    left: -50%;
+    background: linear-gradient(90deg, rgba(0,229,212,0.08), rgba(79,255,232,0.03));
+    transform: translateY(0);
+    filter: blur(24px);
+    animation: waveMove 16s linear infinite;
+  }
+  .wave.w2 { top: 6%; animation-duration: 22s; opacity:0.45; }
+  .wave.w3 { bottom: 6%; animation-duration: 28s; opacity:0.25; transform: translateY(20px) scale(1.1);}
+  @keyframes waveMove { 
+    0% { transform: translateX(-10%) translateY(0);} 
+    50% { transform: translateX(10%) translateY(6%);} 
+    100% { transform: translateX(-10%) translateY(0);}
+   }
+
+  /* Layout */
+  .layout {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 28px;
+    padding: 40px;
+    align-items: start;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    border-radius: 16px;
+    padding: 18px;
+    height: 39vh;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(8px);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .brand {
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .brand .logo {
+    width:48px;height:48px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--cyan-1),var(--cyan-2));
+    color:#002523;font-weight:700;font-family:'Poppins',sans-serif;
+    box-shadow:0 6px 20px rgba(0,229,212,0.12);
+  }
+  .nav-links { margin-top:8px; display:flex;flex-direction:column; gap:6px; }
+  .nav-links a {
+    display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;color:var(--muted);
+    text-decoration:none;font-size:14px;
+  }
+  .nav-links a:hover{ background: rgba(0,229,212,0.04); color:var(--cyan-1); }
+
+  .sidebar .spacer { flex:1; }
+
+  /* Main content card */
+  .main {
+    padding: 20px;
+  }
+  .glass-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    padding: 28px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+    position: relative;
+    overflow: visible;
+  }
+
+  /* Hero / header */
+  .hero {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom: 18px;
+  }
+  .hero-left {
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .title { font-family:'Poppins',sans-serif; font-size:20px; color:var(--cyan-1); font-weight:600; letter-spacing:0.6px; display:flex; align-items:center; gap:10px; }
+  .subtitle { color:var(--muted); font-size:13.5px; }
+
+  /* Dashboard top cards */
+  .cards {
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;
+  }
+  .stat {
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    padding:14px;border-radius:12px;border:1px solid rgba(0,255,247,0.06);
+  }
+  .stat .num { font-family:'Poppins',sans-serif; color:var(--cyan-1); font-weight:600; font-size:18px; }
+  .stat .lbl { color:var(--muted); font-size:13px; margin-top:6px; }
+
+  /* Form area with ECG animation behind */
+  .form-area {
+    position: relative;
+    margin-top: 6px;
+  }
+
+  /* ECG SVG background */
+  .ecg-bg {
+    position:absolute;
+    inset: 10px -10px auto -10px;
+    z-index: 0;
+    pointer-events:none;
+    opacity: 0.28;
+    display:flex;
+    justify-content:center;
+    transform: translateY(-6px);
+  }
+  .ecg-svg { width:100%; max-height:160px; }
+
+  /* Form content must be above */
+  .form-content { position:relative; z-index:2; }
+
+  /* Form inputs */
+  .form-grid { display:grid; grid-template-columns: repeat(12,1fr); gap:12px; }
+  .col-6 { grid-column: span 6; }
+  .col-4 { grid-column: span 4; }
+  label.form-label {
+    display:block;margin-bottom:6px;color:var(--cyan-1);font-family:'Poppins',sans-serif;font-size:13px;
+  }
+
+  .input-glass {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(0,255,247,0.12);
+    border-radius: 10px;
+    color: #eafffb;
+    padding: 10px 12px;
+    font-size:14px;
+    font-family: 'Inter', sans-serif;
+    width:100%;
+    transition: 0.18s;
+  }
+  .input-glass:focus { outline:none; border-color:var(--cyan-1); box-shadow:0 6px 20px rgba(0,229,212,0.08); }
+
+  /* Predict button - heartbeat */
+  .btn-pulse {
+    margin-top:18px;
+    background: linear-gradient(135deg,var(--cyan-1),var(--cyan-2));
+    color:#002523;
+    border:none;
+    padding:12px 40px;
+    border-radius:12px;
+    font-family:'Poppins',sans-serif;
+    font-weight:600;
+    cursor:pointer;
+    display:inline-flex;
+    gap:10px;
+    align-items:center;
+    transform-origin:center;
+    animation: pulse 2.4s infinite;
+    box-shadow: 0 10px 30px rgba(0,229,212,0.08);
+  }
+  .btn-pulse:hover { transform: translateY(-3px) scale(1.01); box-shadow:0 18px 40px rgba(0,229,212,0.14); animation-play-state:running; }
+
+  @keyframes pulse {
+    0% { transform: scale(1); filter:brightness(1); }
+    25% { transform: scale(1.03); filter:brightness(1.02); }
+    50% { transform: scale(1); filter:brightness(1); }
+    75% { transform: scale(1.02); filter:brightness(1.01); }
+    100% { transform: scale(1); filter:brightness(1); }
+  }
+
+  .btn-heart { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:8px; background: rgba(0,0,0,0.06); color:#002523; }
+
+  /* Small screens */
+  @media (max-width: 980px) {
+    .layout { grid-template-columns: 1fr; padding:20px; }
+    .sidebar { height:auto; order:2; }
+    .main { order:1; }
+    .cards { grid-template-columns: repeat(2,1fr); }
+    .form-grid { grid-template-columns: repeat(6,1fr); }
+    .col-6 { grid-column: span 6; }
+    .col-4 { grid-column: span 6; }
+    .ecg-bg { display:none; }
+  }
+  @media (max-width: 520px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+
+  /* subtle floating effect for the card */
+  .glass-card { transform: translateY(0); transition: transform .35s ease; }
+  .glass-card:hover { transform: translateY(-4px); }
+</style>
+
+<!-- Animated background waves -->
+<div class="bg-waves" aria-hidden="true">
+  <div class="wave w1"></div>
+  <div class="wave w2"></div>
+  <div class="wave w3"></div>
+</div>
+
+<div class="layout" role="main">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" aria-label="Main navigation">
+    <div class="brand" aria-hidden="true">
+      <div class="logo"><i class="fas fa-heart"></i></div>
+      <div>
+        <div style="font-family:'Poppins',sans-serif;color:#dffefe;font-weight:600;">CardiacCare</div>
+        <div style="font-size:12px;color:var(--muted);">AI Clinical Portal</div>
+      </div>
+    </div>
+
+    <nav class="nav-links" role="navigation" aria-label="Sidebar links">
+      <a href="#"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="#"><i class="fas fa-notes-medical"></i> New Assessment</a>
+      <a href="#"><i class="fas fa-chart-line"></i> Reports</a>
+      <a href="#"><i class="fas fa-users"></i> Patients</a>
+      <a href="#"><i class="fas fa-cog"></i> Settings</a>
+    </nav>
+
+  </aside>
+
+  <!-- Main content -->
+  <section class="main">
+    <div class="glass-card" role="region" aria-labelledby="cardiac-title">
+      <!-- Hero -->
+      <div class="hero">
+        <div class="hero-left">
+          <div class="title" id="cardiac-title"><i class="fas fa-heartbeat"></i> Cardiac Care AI</div>
+          <div class="subtitle">AI-Powered Clinical Assessment Portal</div>
+        </div>
+        <div class="hero-right" style="display:flex; gap:10px; align-items:center;">
+          <div style="text-align:right;">
+            <div style="font-size:13px;color:var(--muted)">Welcome, Clinician</div>
+            <div style="font-weight:600;color:#dffefe">Dr. Urs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard cards -->
+      <div class="cards" aria-hidden="true">
+        <div class="stat">
+          <div class="num">128</div>
+          <div class="lbl">Assessments Today</div>
+        </div>
+        <div class="stat">
+          <div class="num">5</div>
+          <div class="lbl">Alerts</div>
+        </div>
+        <div class="stat">
+          <div class="num">2m 14s</div>
+          <div class="lbl">Avg. Response Time</div>
+        </div>
+      </div>
+
+      <!-- Form area with ECG animation behind -->
+      <div class="form-area" aria-hidden="false">
+        <!-- ECG SVG background -->
+        <div class="ecg-bg" aria-hidden="true">
+          <!-- Animated ECG line SVG -->
+          <svg class="ecg-svg" viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0%" stop-color="#00e5d4" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#4fffe8" stop-opacity="0.15"/>
+              </linearGradient>
+            </defs>
+            <path id="ecgPath" d="M0 60 L40 60 L55 60 L70 20 L85 100 L100 60 L140 60 L200 60 L220 30 L240 60 L320 60 L360 60 L380 20 L400 80 L420 60 L480 60 L560 60 L620 60 L640 30 L660 60 L740 60 L820 60 L920 60 L1000 60 L1200 60" stroke="url(#g1)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <path id="ecgAnim" d="" stroke="#00e5d4" stroke-width="3" fill="none"/>
+          </svg>
+        </div>
+
+        <div class="form-content" role="form" aria-labelledby="cardiac-title">
+          <form action="{{ url_for('predictPage') }}" method="POST" autocomplete="off">
+            <div class="form-grid">
+              <!-- Patient Info -->
+              <div class="col-6">
+                <label class="form-label">Name</label>
+                <input type="text" name="name" class="input-glass" placeholder="Patient Name" required>
+              </div>
+
+              <div class="col-6">
+                <label class="form-label">Age</label>
+                <input type="number" name="age" class="input-glass" placeholder="Age in years" required>
+              </div>
+
+              <div class="col-6">
+                <label class="form-label">Gender</label>
+                <select class="input-glass" name="Gender">
+                  <option value="0">Male</option>
+                  <option value="1">Female</option>
+                </select>
+              </div>
+
+              <div class="col-6">
+                <label class="form-label">Cardiac History</label>
+                <select class="input-glass" name="his">
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </div>
+
+              <!-- Physical Stats -->
+              <div class="col-6">
+                <label class="form-label">Height (cm)</label>
+                <input type="number" name="height" class="input-glass" required>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Weight (kg)</label>
+                <input type="number" name="Weight" class="input-glass" required>
+              </div>
+
+              <!-- ECG Stats -->
+              <div class="col-4">
+                <label class="form-label">ECG (mV)</label>
+                <input type="number" name="ECG" class="input-glass" value="{{ecg}}" required>
+              </div>
+              <div class="col-4">
+                <label class="form-label">Heart Rate (BPM)</label>
+                <input type="number" name="Heart_Rate" class="input-glass" value="{{hb}}" required>
+              </div>
+              <div class="col-4">
+                <label class="form-label">Temperature (°C)</label>
+                <input type="number" name="Temperature" class="input-glass" value="{{temp}}" required>
+              </div>
+
+              <!-- Full-width button -->
+              <div style="grid-column: 1 / -1; display:flex; justify-content:center;">
+                <button type="submit" class="btn-pulse" aria-label="Predict">
+                  <span class="btn-heart"><i class="fas fa-heartbeat"></i></span>
+                  <span>Predict</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <!-- end form-content -->
+      </div>
+      <!-- end form-area -->
+    </div>
+    <!-- end glass-card -->
+  </section>
+</div>
+
+<!-- ECG animation script (vanilla JS) -->
+<script>
+  // Simple stroke-dasharray animation for the ECG path to create moving pulse effect
+  (function(){
+    const svg = document.querySelector('.ecg-svg');
+    if(!svg) return;
+
+    const path = document.getElementById('ecgPath');
+    if(!path) return;
+
+    // clone path to animate by offset
+    const anim = path.cloneNode(true);
+    anim.setAttribute('id', 'ecgAnimatedCopy');
+    anim.setAttribute('stroke-width', '2.5');
+    anim.setAttribute('stroke-linecap','round');
+    anim.setAttribute('stroke', 'rgba(0,229,212,0.9)');
+    anim.setAttribute('fill', 'none');
+    anim.style.filter = 'drop-shadow(0 6px 12px rgba(0,229,212,0.18))';
+    path.parentNode.appendChild(anim);
+
+    function setupAnimation(p) {
+      const length = p.getTotalLength();
+      p.style.strokeDasharray = length + ' ' + length;
+      p.style.strokeDashoffset = length;
+      p.getBoundingClientRect(); // force layout
+      p.style.transition = 'stroke-dashoffset 1.6s linear';
+      // Repeat the draw periodically to simulate continuous ECG pulses
+      setInterval(()=> {
+        p.style.transition = 'none';
+        p.style.strokeDashoffset = length;
+        requestAnimationFrame(()=> {
+          requestAnimationFrame(()=> {
+            p.style.transition = 'stroke-dashoffset 1.6s linear';
+            p.style.strokeDashoffset = '0';
+          });
+        });
+      }, 1600 + 500); // gap between pulses
+    }
+    setupAnimation(anim);
+
+    // Make subtle float animation
+    let t = 0;
+    function floatLoop(){
+      t += 0.01;
+      svg.style.transform = `translateY(${Math.sin(t) * 4}px)`;
+      requestAnimationFrame(floatLoop);
+    }
+    floatLoop();
+  })();
+</script>
+
+{% endblock %}

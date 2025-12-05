@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cardiac Care AI</title>
+  <link rel="icon" href="{{ url_for('static', filename='logo1.png') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <style>
+    /* Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Inter:wght@300;400;500&display=swap');
+
+    /* Body */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0f14 0%, #071e25 100%);
+      color: #e8f9f8;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(17,17,17,0.7);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 15px rgba(0,229,212,0.25);
+      padding: 0.8rem 2rem;
+    }
+
+    .navbar-brand {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      color: #00e5d4 !important;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-link {
+      color: #b5dbd8 !important;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .nav-link:hover {
+      color: #9b59b6 !important;
+    }
+
+    .nav-item.active .nav-link {
+      color: #00e5d4 !important;
+      font-weight: 600;
+    }
+
+    .navbar-toggler {
+      border-color: #00e5d4;
+    }
+
+    /* Main container */
+    main {
+      margin-top: 90px;
+      min-height: 80vh;
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(17,17,17,0.7);
+      backdrop-filter: blur(8px);
+      color: #777;
+      text-align: center;
+      padding: 15px 0;
+      box-shadow: 0 -2px 15px rgba(0,229,212,0.2);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+    }
+
+    footer span {
+      color: #00e5d4;
+      font-weight: 600;
+    }
+
+    /* Buttons */
+    .btn-glass {
+      color: #002523;
+      background: linear-gradient(135deg, #00e5d4, #4fffe8);
+      border: none;
+      border-radius: 14px;
+      padding: 10px 28px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: 0.25s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-glass:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 18px rgba(0,229,212,0.45);
+    }
+
+    /* Collapse menu background on mobile */
+    .navbar-collapse {
+      background: rgba(17,17,17,0.85);
+      backdrop-filter: blur(10px);
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0,229,212,0.7)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top">
+  <a class="navbar-brand" href="{{ url_for('home') }}">
+    <i class="fas fa-heart-pulse"></i> Cardiac Care AI
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navContent">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navContent">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item {% if request.path == '/' %}active{% endif %}">
+        <a class="nav-link" href="{{ url_for('home') }}"><i class="fa fa-home"></i> Home</a>
+      </li>
+
+      {% if session.get('user') %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('fetalPage') }}"><i class="fa fa-tachometer-alt"></i> Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('logout') }}"><i class="fa fa-sign-out-alt"></i> Logout</a>
+        </li>
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('index') }}"><i class="fa fa-user"></i> Login</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <div class="container-fluid">
+    {% block content %}
+    {% endblock %}
+  </div>
+</main>
+
+<footer>
+  Cardiac Care AI — <span>Cardiac Monitoring using AI</span>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
