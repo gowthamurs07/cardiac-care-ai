@@ -23,9 +23,12 @@ Cardiac Care AI is an intelligent web application designed to **analyze ECG data
 ---
 
 ## Screenshots
-_Add screenshots of your app to showcase UI and ECG dashboard_  
+Dashboard 
 
 ![Dashboard](static/dashboard.png)
+
+Cardio Analysis
+
 ![Cardio Analysis](static/analysis.png) 
 
 ---
