@@ -38,3 +38,7 @@ Cardio Analysis
 ```bash
 git clone https://github.com/gowthamurs07/cardiac-care-ai.git
 cd cardiac-care-ai
+
+## License
+This project is licensed under the MIT License.
+
