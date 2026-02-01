@@ -1,5 +1,3 @@
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-
 # Cardiac Care AI ❤️
 
 Cardiac Care AI is an intelligent web application designed to **analyze ECG data and provide cardiac health insights**. It uses AI to detect arrhythmias from uploaded ECG recordings.
